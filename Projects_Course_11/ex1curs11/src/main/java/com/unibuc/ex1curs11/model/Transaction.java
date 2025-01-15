@@ -7,6 +7,10 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.PositiveOrZero;
 
 @Getter
 @Setter
@@ -18,8 +22,13 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Transaction Amount cannot be null.")
+    @Digits(integer = 15, fraction = 2, message = "Transaction Amount must be a valid monetary amount.")
+    @PositiveOrZero(message = "Transaction Amount must be zero or positive.")
     private BigDecimal amount;
 
+    @NotNull(message = "Transaction date cannot be null.")
+    @PastOrPresent(message = "Transaction date must be today or in the past.")
     private LocalDate transactionDate;
 
     private String description;

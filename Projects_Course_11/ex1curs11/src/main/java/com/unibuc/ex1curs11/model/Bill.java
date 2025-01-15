@@ -7,6 +7,9 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 
 @Getter
@@ -21,6 +24,9 @@ public class Bill {
 
     private String billName;
 
+    @NotNull(message = "Bill amount cannot be null.")
+    @Digits(integer = 15, fraction = 2, message = "Bill amount must be a valid monetary amount.")
+    @PositiveOrZero(message = "Bill amount must be zero or positive.")
     private BigDecimal amount;
 
     private LocalDate nextDueDate;

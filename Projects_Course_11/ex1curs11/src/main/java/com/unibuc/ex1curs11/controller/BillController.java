@@ -29,4 +29,18 @@ public class BillController {
         List<BillDTO> bills = billService.getUserBills(userId);
         return ResponseEntity.ok(bills);
     }
+
+    @PutMapping("/{billId}")
+    @ApiOperation("Update an existing bill")
+    public ResponseEntity<BillDTO> updateBill(@PathVariable Long billId, @RequestBody BillDTO billDTO) {
+        BillDTO updatedBill = billService.updateBill(billId, billDTO);
+        return ResponseEntity.ok(updatedBill);
+    }
+
+    @DeleteMapping("/{billId}")
+    @ApiOperation("Delete an existing bill")
+    public ResponseEntity<Void> deleteBill(@PathVariable Long billId) {
+        billService.deleteBill(billId);
+        return ResponseEntity.noContent().build(); // HTTP 204 No Content response
+    }
 }

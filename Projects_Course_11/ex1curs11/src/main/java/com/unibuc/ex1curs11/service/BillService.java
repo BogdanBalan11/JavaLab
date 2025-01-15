@@ -1,6 +1,7 @@
 package com.unibuc.ex1curs11.service;
 
 import com.unibuc.ex1curs11.dto.BillDTO;
+import com.unibuc.ex1curs11.exception.ItemNotFound;
 import com.unibuc.ex1curs11.model.Bill;
 import com.unibuc.ex1curs11.model.User;
 import com.unibuc.ex1curs11.repository.BillRepository;
@@ -22,7 +23,7 @@ public class BillService {
 
     public BillDTO createBill(Long userId, BillDTO billDTO) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ItemNotFound("User"));
 
         Bill bill = new Bill();
         bill.setBillName(billDTO.getBillName());
@@ -39,6 +40,26 @@ public class BillService {
         return billRepository.findByUserId(userId).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
+    }
+
+    public BillDTO updateBill(Long billId, BillDTO billDTO) {
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new ItemNotFound("Bill"));
+
+        bill.setBillName(billDTO.getBillName());
+        bill.setAmount(billDTO.getAmount());
+        bill.setNextDueDate(billDTO.getNextDueDate());
+        bill.setDescription(billDTO.getDescription());
+
+        billRepository.save(bill);
+
+        return convertToDTO(bill);
+    }
+
+    public void deleteBill(Long billId) {
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new ItemNotFound("Bill"));
+        billRepository.delete(bill);
     }
 
     private BillDTO convertToDTO(Bill bill) {

@@ -1,6 +1,7 @@
 package com.unibuc.ex1curs11.service;
 
 import com.unibuc.ex1curs11.dto.GoalDTO;
+import com.unibuc.ex1curs11.exception.ItemNotFound;
 import com.unibuc.ex1curs11.model.Goal;
 import com.unibuc.ex1curs11.model.User;
 import com.unibuc.ex1curs11.repository.GoalRepository;
@@ -22,7 +23,7 @@ public class GoalService {
 
     public GoalDTO createGoal(Long userId, GoalDTO goalDTO) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ItemNotFound("User"));
 
         Goal goal = new Goal();
         goal.setGoalName(goalDTO.getGoalName());

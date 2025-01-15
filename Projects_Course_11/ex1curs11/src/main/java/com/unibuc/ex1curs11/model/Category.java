@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.util.List;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 
 @Getter
@@ -18,6 +19,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Category name cannot be null.")
     private String name;
 
     private String description;

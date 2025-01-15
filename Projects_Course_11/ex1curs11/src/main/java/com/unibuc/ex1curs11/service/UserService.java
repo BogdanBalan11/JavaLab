@@ -4,6 +4,7 @@ package com.unibuc.ex1curs11.service;
 import com.unibuc.ex1curs11.dto.UserDTO;
 import com.unibuc.ex1curs11.dto.UserLoginDTO;
 import com.unibuc.ex1curs11.dto.UserRegistrationDTO;
+import com.unibuc.ex1curs11.exception.UserWithSameEmailExists;
 import com.unibuc.ex1curs11.model.User;
 import com.unibuc.ex1curs11.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,16 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-   // @Autowired
-    //private PasswordEncoder passwordEncoder; // For secure password storage
-
     public UserDTO registerUser(UserRegistrationDTO registrationDTO) {
+
+        boolean userWithSameEmailExists = userRepository.existsByEmail(registrationDTO.getEmail());
+
+        if (userWithSameEmailExists) {
+            throw new UserWithSameEmailExists();
+        }
+
         User user = new User();
         user.setEmail(registrationDTO.getEmail());
-        //user.setPassword(passwordEncoder.encode(registrationDTO.getPassword()));
         user.setPassword(registrationDTO.getPassword());
         user.setName(registrationDTO.getName());
         user.setBalance(BigDecimal.ZERO);
@@ -38,12 +42,11 @@ public class UserService {
         Optional<User> userOpt = userRepository.findByEmail(loginDTO.getEmail());
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-           // if (passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
             if (loginDTO.getPassword().equals(user.getPassword())) {
                 return convertToDTO(user);
             }
         }
-        return null; // or throw an AuthenticationException
+        return null;
     }
 
     private UserDTO convertToDTO(User user) {

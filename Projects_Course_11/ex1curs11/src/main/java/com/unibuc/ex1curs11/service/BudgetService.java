@@ -1,6 +1,7 @@
 package com.unibuc.ex1curs11.service;
 
 import com.unibuc.ex1curs11.dto.BudgetDTO;
+import com.unibuc.ex1curs11.exception.ItemNotFound;
 import com.unibuc.ex1curs11.model.Budget;
 import com.unibuc.ex1curs11.model.User;
 import com.unibuc.ex1curs11.repository.BudgetRepository;
@@ -22,7 +23,7 @@ public class BudgetService {
 
     public BudgetDTO createBudget(Long userId, BudgetDTO budgetDTO) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ItemNotFound("User"));
 
         Budget budget = new Budget();
         budget.setAmount(budgetDTO.getAmount());

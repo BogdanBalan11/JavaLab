@@ -1,6 +1,7 @@
 package com.unibuc.ex1curs11.service;
 
 import com.unibuc.ex1curs11.dto.TransactionDTO;
+import com.unibuc.ex1curs11.exception.ItemNotFound;
 import com.unibuc.ex1curs11.model.Category;
 import com.unibuc.ex1curs11.model.Transaction;
 import com.unibuc.ex1curs11.model.User;
@@ -24,12 +25,12 @@ public class TransactionService {
 
     public TransactionDTO addTransaction(TransactionDTO transactionDTO) {
         User user = userRepository.findById(transactionDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ItemNotFound("User"));
 
         Category category = null;
         if (transactionDTO.getCategoryId() != null) {
             category = categoryRepository.findById(transactionDTO.getCategoryId())
-                    .orElseThrow(() -> new RuntimeException("Category not found"));
+                    .orElseThrow(() -> new ItemNotFound("Category"));
         }
 
         Transaction transaction = new Transaction();
@@ -50,7 +51,6 @@ public class TransactionService {
         transactionRepository.save(transaction);
         userRepository.save(user); // update user’s balance
 
-        // Fill back the ID to the DTO
         transactionDTO.setId(transaction.getId());
         return transactionDTO;
     }
